@@ -60,6 +60,8 @@ fn positive_diff() {
 #[test]
 fn regeneration() {
     assert_singlethreaded();
+    setup_file("tests/goldenfiles/regeneration1.txt", "Junk");
+    setup_file("tests/goldenfiles/regeneration2.txt", "More junk");
 
     {
         env::set_var("REGENERATE_GOLDENFILES", "1");
