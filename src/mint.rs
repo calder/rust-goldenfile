@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use tempdir::TempDir;
 
-use differs::*;
+use differs;
 
 pub struct Mint {
     path: PathBuf,
@@ -17,12 +17,17 @@ pub struct Mint {
 
 impl Mint {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        // TODO: Use a different differ for certain file extensions.
+        Self::new_with_differ(path, Box::new(differs::text_diff))
+    }
+
+    pub fn new_with_differ<P: AsRef<Path>>(path: P, differ: Box<Fn(&Path, &Path)>) -> Self {
         let tempdir = TempDir::new("rust-goldenfiles").unwrap();
         Mint {
             path: path.as_ref().to_path_buf(),
             files: vec![],
             tempdir: tempdir,
-            differ: Box::new(text_diff),
+            differ: differ,
         }
     }
 
