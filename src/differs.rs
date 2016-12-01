@@ -4,6 +4,8 @@ use std::path::Path;
 
 use difference;
 
+pub type Differ = Box<Fn(&Path, &Path)>;
+
 pub fn text_diff(old: &Path, new: &Path) {
     difference::assert_diff(&read_file(old), &read_file(new), "\n", 0);
 }
