@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd "`dirname "$0"`"/../.git
+
+BACKUP="hooks.bac`ls -d hooks.bac* 2> /dev/null | wc -l | tr -d ' '`"
+mv hooks $BACKUP
+ln -s ../scripts/git-hooks hooks
