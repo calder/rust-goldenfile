@@ -17,11 +17,15 @@ pub struct Mint {
 impl Mint {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let tempdir = TempDir::new("rust-goldenfiles").unwrap();
-        Mint {
+        let mint = Mint {
             path: path.as_ref().to_path_buf(),
             files: vec![],
             tempdir: tempdir,
-        }
+        };
+        fs::create_dir_all(mint.goldenfile_path())
+            .expect(&format!("Failed to create goldenfile directory {:?}",
+                             mint.goldenfile_path()));
+        return mint;
     }
 
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
@@ -32,7 +36,7 @@ impl Mint {
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
         let maybe_file = File::create(abs_path.clone());
         if maybe_file.is_ok() {
-            // TODO: Use different differs for certain file extensions.
+            // TODO: Use other differs for different file extensions.
             let differ = Box::new(text_diff);
             self.files.push((path.as_ref().to_path_buf(), differ));
         }
