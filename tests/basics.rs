@@ -8,16 +8,6 @@ use std::path::Path;
 
 use goldenfile::Mint;
 
-fn assert_singlethreaded() {
-    let threads = env::var("RUST_TEST_THREADS");
-    if !threads.is_ok() || threads.unwrap() != "1" {
-        print!("\nERROR: This test sets environment variables and can't be ");
-        println!("run concurrently with other tests. Rerun with:");
-        println!("    env RUST_TEST_THREADS=1 cargo test\n");
-        panic!("Cannot run test in parallel mode.");
-    }
-}
-
 fn setup_file(path: &str, contents: &str) {
     let path = env::current_exe()
         .unwrap().parent()
@@ -59,29 +49,15 @@ fn positive_diff() {
 
 #[test]
 fn regeneration() {
-    assert_singlethreaded();
     setup_file("tests/goldenfiles/regeneration1.txt", "Junk");
     setup_file("tests/goldenfiles/regeneration2.txt", "More junk");
 
-    {
-        env::set_var("REGENERATE_GOLDENFILES", "1");
+    let mut mint = Mint::new("tests/goldenfiles");
+    let mut file1 = mint.new_goldenfile("regeneration1.txt").unwrap();
+    let mut file2 = mint.new_goldenfile("regeneration2.txt").unwrap();
 
-        let mut mint = Mint::new("tests/goldenfiles");
-        let mut file1 = mint.new_goldenfile("regeneration1.txt").unwrap();
-        let mut file2 = mint.new_goldenfile("regeneration2.txt").unwrap();
+    write!(file1, "Hello world!").unwrap();
+    write!(file2, "foobar").unwrap();
 
-        write!(file1, "Hello world!").unwrap();
-        write!(file2, "foobar").unwrap();
-    }
-
-    {
-        env::remove_var("REGENERATE_GOLDENFILES");
-
-        let mut mint = Mint::new("tests/goldenfiles");
-        let mut file1 = mint.new_goldenfile("regeneration1.txt").unwrap();
-        let mut file2 = mint.new_goldenfile("regeneration2.txt").unwrap();
-
-        write!(file1, "Hello world!").unwrap();
-        write!(file2, "foobar").unwrap();
-    }
+    mint.update_goldenfiles();
 }

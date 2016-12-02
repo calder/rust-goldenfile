@@ -43,6 +43,30 @@ impl Mint {
         maybe_file
     }
 
+    pub fn check_goldenfiles(&self) {
+        for &(ref file, ref differ) in &self.files {
+            let old = self.goldenfile_path().join(&file);
+            let new = self.tempdir.path().join(&file);
+
+            println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
+            println!("To regenerate the goldenfile, run");
+            println!("    env REGENERATE_GOLDENFILES=1 cargo test");
+            println!("------------------------------------------------------------");
+            differ(&old, &new);
+            println!("<NO DIFFERENCE>");
+        }
+    }
+
+    pub fn update_goldenfiles(&self) {
+        for &(ref file, _) in &self.files {
+            let old = self.goldenfile_path().join(&file);
+            let new = self.tempdir.path().join(&file);
+
+            println!("Updating {:?}.", file.to_str().unwrap());
+            fs::copy(&new, &old).expect(&format!("Error copying {:?} to {:?}.", &new, &old));
+        }
+    }
+
     fn goldenfile_path(&self) -> PathBuf {
         env::current_exe()
             .unwrap()
@@ -59,23 +83,10 @@ impl Mint {
 impl Drop for Mint {
     fn drop(&mut self) {
         let regen_var = env::var("REGENERATE_GOLDENFILES");
-        let regen = regen_var.is_ok() && regen_var.unwrap() == "1";
-
-        for &(ref file, ref differ) in &self.files {
-            let old = self.goldenfile_path().join(&file);
-            let new = self.tempdir.path().join(&file);
-
-            if regen {
-                println!("Updating {:?}.", file.to_str().unwrap());
-                fs::copy(&new, &old).expect(&format!("Error copying {:?} to {:?}.", &new, &old));
-            } else {
-                println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
-                println!("To regenerate the goldenfile, run");
-                println!("    env REGENERATE_GOLDENFILES=1 cargo test");
-                println!("------------------------------------------------------------");
-                differ(&old, &new);
-                println!("<NO DIFFERENCE>");
-            }
+        if regen_var.is_ok() && regen_var.unwrap() == "1" {
+            self.update_goldenfiles();
+        } else {
+            self.check_goldenfiles();
         }
     }
 }
