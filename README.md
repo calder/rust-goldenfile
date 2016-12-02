@@ -32,6 +32,6 @@ fn test() {
 
 ## Why Goldenfiles?
 
-Goldenfiles often get a bad rap. Used properly, they provide low overhead, insightful tests of a program's operation. "Properly" here means being explicit and selective about what gets written to the goldenfile.
+Goldenfiles often get a bad rap. Used properly, they provide low overhead, insightful tests of a program's operation. "Properly" means being explicit and selective about what gets written to the goldenfile.
 
 You could use them to test the output of a parser, the order of a graph traversal, the results of a simulation, or anything else that shouldn't change without a human's approval.
