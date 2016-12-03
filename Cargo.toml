@@ -3,6 +3,7 @@ name = "goldenfile"
 version = "0.4.0"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
+documentation = "http://calder.github.io/rust-goldenfile"
 repository = "https://github.com/calder/rust-goldenfile"
 readme = "README.md"
 license = "MIT"
