@@ -1,6 +1,10 @@
 [package]
 name = "goldenfile"
 version = "0.4.0"
+description = "Simple goldenfile testing library"
+keywords = ["goldenfile", "test", "library"]
+readme = "README.md"
+license = "MIT"
 authors = ["Calder Coalson <caldercoalson@gmail.com>"]
 
 [dependencies]
