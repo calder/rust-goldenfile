@@ -31,7 +31,7 @@ fn test() {
   // and file2 against their old (golden) contents and fail the test if they
   // differ. The original contents will not be modified unless you run:
   //
-  //     env REGENERATE_GOLDENFILES=1 cargo test.
+  //     env REGENERATE_GOLDENFILES=1 cargo test
   //
 }
 ```
