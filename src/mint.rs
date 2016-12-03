@@ -1,3 +1,5 @@
+//! Used to create goldenfiles.
+
 use std::env;
 use std::fs;
 use std::fs::File;
@@ -8,6 +10,15 @@ use tempdir::TempDir;
 
 use differs::*;
 
+/// A Mint creates goldenfiles.
+///
+/// When a Mint goes out of scope, it will do one of two things depending on the
+/// value of the `REGENERATE_GOLDENFILES` environment variable:
+///
+///   1. If `REGENERATE_GOLDENFILES!=1`, it will check the new goldenfile
+///      contents against their old contents, and panic if they differ.
+///   2. If `REGENERATE_GOLDENFILES=1`, it will replace the old goldenfile
+///      contents with the newly written contents.
 pub struct Mint {
     path: PathBuf,
     tempdir: TempDir,
@@ -15,6 +26,9 @@ pub struct Mint {
 }
 
 impl Mint {
+    /// Create a new goldenfile Mint.
+    ///
+    /// All goldenfiles will be created in the Mint's directory.
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let tempdir = TempDir::new("rust-goldenfiles").unwrap();
         let mint = Mint {
@@ -28,6 +42,12 @@ impl Mint {
         return mint;
     }
 
+    /// Create a new goldenfile.
+    ///
+    /// The returned file is actually a temporary file, not the goldenfile
+    /// itself. When the Mint goes out of scope, it will either check the temp
+    /// file against the real goldenfile, or replace the real goldenfile based
+    /// on the value of the `REGENERATE_GOLDENFILES` environment variable.
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
         if path.as_ref().is_absolute() {
             return Err(Error::new(ErrorKind::InvalidInput, "Path must be relative."));
@@ -43,6 +63,10 @@ impl Mint {
         maybe_file
     }
 
+    /// Check new goldenfile contents against old, and panic if they differ.
+    ///
+    /// This is called automatically when a Mint goes out of scope and
+    /// `REGENERATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
         for &(ref file, ref differ) in &self.files {
             let old = self.goldenfile_path().join(&file);
@@ -57,6 +81,10 @@ impl Mint {
         }
     }
 
+    /// Overwrite old goldenfile contents with their new contents.
+    ///
+    /// This is called automatically when a Mint goes out of scope and
+    /// `REGENERATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
         for &(ref file, _) in &self.files {
             let old = self.goldenfile_path().join(&file);

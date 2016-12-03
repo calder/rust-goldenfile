@@ -20,4 +20,5 @@ fn test() {
   // differ. The original contents will not be modified unless you run:
   //
   //     env REGENERATE_GOLDENFILES=1 cargo test.
+  //
 }
