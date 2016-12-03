@@ -2,7 +2,7 @@
 
 **Simple goldenfile testing in Rust.**
 
-Goldenfile tests generate one or more output files as they run. At the end of the test, these output files are compared to the same files produced by previous runs. This ensures that:
+Goldenfile tests generate one or more output files as they run. At the end of the test, these output files are compared to the files produced by previous runs. This ensures that:
 
   1. Goldenfiles cannot change accidentally.
   2. All changes are explicit and version controlled.
