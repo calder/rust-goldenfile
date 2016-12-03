@@ -1,4 +1,4 @@
-# Rust Goldenfile &emsp; [![Build Status](https://api.travis-ci.org/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile)
+# Rust Goldenfile &emsp; [![Build Status](https://api.travis-ci.org/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile) [![Latest Version](https://img.shields.io/crates/v/goldenfile.svg)](https://crates.io/crates/goldenfile)
 
 **Simple goldenfile testing in Rust.**
 
