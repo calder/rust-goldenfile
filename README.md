@@ -2,9 +2,7 @@
 
 **Simple goldenfile testing in Rust.**
 
-Goldenfile tests generate one or more output files as they run. At the end of
-the test, these output files are compared to the same files produced by
-previous runs. This ensures that:
+Goldenfile tests generate one or more output files as they run. At the end of the test, these output files are compared to the same files produced by previous runs. This ensures that:
 
   1. Goldenfiles cannot change accidentally.
   2. All changes are explicit and version controlled.
@@ -40,6 +38,8 @@ fn test() {
 
 ## Why Goldenfiles?
 
-Goldenfiles often get a bad rap. Used properly, they provide low overhead, insightful tests of a program's operation. "Properly" means being explicit and selective about what gets written to the goldenfile.
+Goldenfiles often get a bad rap. Used properly, they provide low overhead, insightful tests of a program's operation. "Properly" just means being explicit and selective about what gets written to the goldenfile. You can use them to test the output of a parser, the order of a graph traversal, the results of a simulation, or anything else that shouldn't change without a human's approval.
 
-You could use them to test the output of a parser, the order of a graph traversal, the results of a simulation, or anything else that shouldn't change without a human's approval.
+## Contributing
+
+Feel free to submit pull requests for new content differs or anything else.
