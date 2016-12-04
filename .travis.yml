@@ -7,9 +7,16 @@ matrix:
   allow_failures:
     - rust: nightly
 after_success: |
-    bash <(curl -s https://codecov.io/bash) && \
-    cargo doc \
-    && echo '<meta http-equiv=refresh content=0;url=goldenfile/index.html>' > target/doc/index.html && \
+    uname -a \
+    for file in target/debug/<PROJECT-NAME>-* \
+      do mkdir -p "target/cov/$(basename $file)" \
+      kcov \
+        --exclude-pattern=/.cargo,/usr/lib \
+        --verify "target/cov/$(basename $file)" "$file" \
+    done && \
+    bash <(curl -s https://codecov.io/bash) \
+    cargo doc && \
+    echo '<meta http-equiv=refresh content=0;url=goldenfile/index.html>' > target/doc/index.html && \
     sudo pip install ghp-import && \
     ghp-import -n target/doc && \
     git push -qf https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
