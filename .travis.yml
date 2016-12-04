@@ -7,6 +7,7 @@ matrix:
   allow_failures:
     - rust: nightly
 after_success: |
+    bash <(curl -s https://codecov.io/bash) && \
     cargo doc \
     && echo '<meta http-equiv=refresh content=0;url=goldenfile/index.html>' > target/doc/index.html && \
     sudo pip install ghp-import && \
