@@ -1,6 +1,5 @@
 extern crate goldenfile;
 
-use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
@@ -9,12 +8,7 @@ use std::path::Path;
 use goldenfile::Mint;
 
 fn setup_file(path: &str, contents: &str) {
-    let path = env::current_exe()
-        .unwrap().parent()
-        .unwrap().parent()
-        .unwrap().parent()
-        .unwrap()
-        .join(Path::new(path));
+    let path = Path::new(path);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     let mut file = File::create(path).unwrap();
     write!(file, "{}", contents).unwrap();

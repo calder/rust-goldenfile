@@ -95,16 +95,8 @@ impl Mint {
         }
     }
 
-    fn goldenfile_path(&self) -> PathBuf {
-        env::current_exe()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .join(self.path.clone())
+    fn goldenfile_path(&self) -> &PathBuf {
+        &self.path
     }
 }
 

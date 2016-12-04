@@ -10,6 +10,12 @@ license = "MIT"
 license-file = "LICENSE"
 authors = ["Calder Coalson <caldercoalson@gmail.com>"]
 
+exclude = [
+  "*.sublime-project",
+  ".travis.yml",
+  "scripts/",
+]
+
 [dependencies]
 difference = "0.4"
 tempdir = "0.3"
