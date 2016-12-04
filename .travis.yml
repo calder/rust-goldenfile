@@ -7,16 +7,23 @@ matrix:
   allow_failures:
     - rust: nightly
 after_success: |
-    uname -a \
-    for file in target/debug/<PROJECT-NAME>-* \
-      do mkdir -p "target/cov/$(basename $file)" \
-      kcov \
-        --exclude-pattern=/.cargo,/usr/lib \
-        --verify "target/cov/$(basename $file)" "$file" \
-    done && \
-    bash <(curl -s https://codecov.io/bash) \
-    cargo doc && \
-    echo '<meta http-equiv=refresh content=0;url=goldenfile/index.html>' > target/doc/index.html && \
-    sudo pip install ghp-import && \
-    ghp-import -n target/doc && \
-    git push -qf https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+  tar xzf master.tar.gz &&
+  cd kcov-master &&
+  mkdir build &&
+  cd build &&
+  cmake .. &&
+  make &&
+  sudo make install &&
+  cd ../.. &&
+  rm -rf kcov-master &&
+  for file in target/debug/<PROJECT-NAME>-*; do mkdir -p "target/cov/$(basename $file)"; kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+  bash <(curl -s https://codecov.io/bash) &&
+  echo "Finished uploading code coverage."
+
+  cargo doc &&
+  echo '<meta http-equiv=refresh content=0;url=goldenfile/index.html>' > target/doc/index.html &&
+  sudo pip install ghp-import &&
+  ghp-import -n target/doc &&
+  git push -qf https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages &&
+  echo "Finished uploading documentation."
