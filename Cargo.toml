@@ -12,7 +12,6 @@ authors = ["Calder Coalson <caldercoalson@gmail.com>"]
 
 exclude = [
   "*.sublime-project",
-  "*.sublime-workspace",
   ".travis.yml",
   "scripts/*",
 ]
