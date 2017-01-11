@@ -10,7 +10,7 @@ RESET=`tput sgr0`
 cargo fmt -- --write-mode diff \
     || { echo "\n${RED}ERROR${RESET}: Must run \`cargo fmt\` before submitting."; exit 1; }
 
-env RUST_TEST_THREADS=1 cargo test || exit 1
+cargo test || exit 1
 
 perl -0777 -pe 's/.*## Usage\n\n```rust\n(.*)```.*/$1/s' README.md \
     | colordiff tests/usage.rs - \
