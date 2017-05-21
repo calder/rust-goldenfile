@@ -25,6 +25,19 @@ pub struct Mint {
     files: Vec<(PathBuf, Differ)>,
 }
 
+/// Defines the type of the differ to use.
+///
+/// A differ is a component that checks if the new and old files are the same,
+/// and prints helpful output about what is different.
+pub enum DifferType {
+    /// A text differ compares unicode text files and prints colored diffs if
+    /// they do not match.
+    Text,
+    /// A binary differ compares any kinds of binary files, but does not print
+    /// any further info about the actual difference.
+    Binary
+}
+
 impl Mint {
     /// Create a new goldenfile Mint.
     ///
@@ -42,13 +55,16 @@ impl Mint {
         return mint;
     }
 
-    /// Create a new goldenfile.
+    /// Create a new goldenfile, with a differ of the given type.
     ///
     /// The returned file is actually a temporary file, not the goldenfile
     /// itself. When the Mint goes out of scope, it will either check the temp
     /// file against the real goldenfile, or replace the real goldenfile based
     /// on the value of the `REGENERATE_GOLDENFILES` environment variable.
-    pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
+    pub fn new_goldenfile<P: AsRef<Path>>(&mut self,
+                                          path: P,
+                                          differ_type: DifferType) -> Result<File> {
+
         if path.as_ref().is_absolute() {
             return Err(Error::new(ErrorKind::InvalidInput, "Path must be relative."));
         }
@@ -57,7 +73,10 @@ impl Mint {
         let maybe_file = File::create(abs_path.clone());
         if maybe_file.is_ok() {
             // TODO: Use other differs for different file extensions.
-            let differ = Box::new(text_diff);
+            let differ = Box::new(match differ_type {
+                DifferType::Text => text_diff,
+                DifferType::Binary => binary_diff,
+            });
             self.files.push((path.as_ref().to_path_buf(), differ));
         }
         maybe_file
