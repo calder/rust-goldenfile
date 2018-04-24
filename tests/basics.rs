@@ -55,3 +55,15 @@ fn regeneration() {
 
     mint.update_goldenfiles();
 }
+
+#[test]
+#[should_panic(expected = "assertion failed")]
+fn external_panic() {
+    setup_file("tests/goldenfiles/panic.txt", "old");
+
+    let mut mint = Mint::new("tests/goldenfiles");
+    let mut file1 = mint.new_goldenfile("panic.txt").unwrap();
+
+    write!(file1, "new").unwrap();
+    assert!(false);
+}

@@ -5,6 +5,7 @@ use std::fs;
 use std::fs::File;
 use std::io::{Error, ErrorKind, Result};
 use std::path::{Path, PathBuf};
+use std::thread;
 
 use tempdir::TempDir;
 
@@ -102,6 +103,9 @@ impl Mint {
 
 impl Drop for Mint {
     fn drop(&mut self) {
+        if thread::panicking() {
+            return;
+        }
         let regen_var = env::var("REGENERATE_GOLDENFILES");
         if regen_var.is_ok() && regen_var.unwrap() == "1" {
             self.update_goldenfiles();
