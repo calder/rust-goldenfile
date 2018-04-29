@@ -37,9 +37,10 @@ impl Mint {
             files: vec![],
             tempdir: tempdir,
         };
-        fs::create_dir_all(mint.goldenfile_path())
-            .expect(&format!("Failed to create goldenfile directory {:?}",
-                             mint.goldenfile_path()));
+        fs::create_dir_all(&mint.path).expect(&format!(
+            "Failed to create goldenfile directory {:?}",
+            mint.path
+        ));
         return mint;
     }
 
@@ -51,7 +52,10 @@ impl Mint {
     /// on the value of the `REGENERATE_GOLDENFILES` environment variable.
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
         if path.as_ref().is_absolute() {
-            return Err(Error::new(ErrorKind::InvalidInput, "Path must be relative."));
+            return Err(Error::new(
+                ErrorKind::InvalidInput,
+                "Path must be relative.",
+            ));
         }
 
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
@@ -70,7 +74,7 @@ impl Mint {
     /// `REGENERATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
         for &(ref file, ref differ) in &self.files {
-            let old = self.goldenfile_path().join(&file);
+            let old = self.path.join(&file);
             let new = self.tempdir.path().join(&file);
 
             println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
@@ -88,16 +92,12 @@ impl Mint {
     /// `REGENERATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
         for &(ref file, _) in &self.files {
-            let old = self.goldenfile_path().join(&file);
+            let old = self.path.join(&file);
             let new = self.tempdir.path().join(&file);
 
             println!("Updating {:?}.", file.to_str().unwrap());
             fs::copy(&new, &old).expect(&format!("Error copying {:?} to {:?}.", &new, &old));
         }
-    }
-
-    fn goldenfile_path(&self) -> &PathBuf {
-        &self.path
     }
 }
 
