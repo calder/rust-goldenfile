@@ -2,7 +2,7 @@
 name = "goldenfile"
 version = "0.6.0"
 description = "Simple goldenfile testing library"
-keywords = ["gold", "goldenfile", "test", "testing", "lib", "library"]
+keywords = ["goldenfile", "test", "library"]
 documentation = "https://docs.rs/goldenfile"
 repository = "https://github.com/calder/rust-goldenfile"
 readme = "README.md"
