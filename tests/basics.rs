@@ -28,7 +28,7 @@ fn basic_usage() {
 }
 
 #[test]
-#[should_panic]
+#[should_panic(expected = "foobar")]
 fn positive_diff() {
     setup_file("tests/goldenfiles/positive_diff1.txt", "Hello world!");
     setup_file("tests/goldenfiles/positive_diff2.txt", "foobar");
