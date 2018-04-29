@@ -1,6 +1,6 @@
 [package]
 name = "goldenfile"
-version = "0.6.0"
+version = "0.7.0"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
 documentation = "https://docs.rs/goldenfile"
