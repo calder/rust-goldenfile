@@ -32,7 +32,9 @@
 
 #![deny(missing_docs)]
 
+#[macro_use(assert_diff)]
 extern crate difference;
+
 extern crate tempdir;
 
 pub mod differs;
