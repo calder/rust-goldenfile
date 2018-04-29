@@ -44,13 +44,23 @@ impl Mint {
         return mint;
     }
 
-    /// Create a new goldenfile.
+    /// Create a new goldenfile. See Mint::new_goldenfile_with_differ for full
+    /// documentation. This function infers a differ from the file's extension.
+    pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
+        self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
+    }
+
+    /// Create a new goldenfile with the specified diff function.
     ///
     /// The returned file is actually a temporary file, not the goldenfile
     /// itself. When the Mint goes out of scope, it will either check the temp
     /// file against the real goldenfile, or replace the real goldenfile based
     /// on the value of the `REGENERATE_GOLDENFILES` environment variable.
-    pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
+    pub fn new_goldenfile_with_differ<P: AsRef<Path>>(
+        &mut self,
+        path: P,
+        differ: Differ,
+    ) -> Result<File> {
         if path.as_ref().is_absolute() {
             return Err(Error::new(
                 ErrorKind::InvalidInput,
@@ -61,8 +71,6 @@ impl Mint {
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
         let maybe_file = File::create(abs_path.clone());
         if maybe_file.is_ok() {
-            // TODO: Use other differs for different file extensions.
-            let differ = Box::new(text_diff);
             self.files.push((path.as_ref().to_path_buf(), differ));
         }
         maybe_file
@@ -101,7 +109,14 @@ impl Mint {
     }
 }
 
+/// Get the diff function to use for a given file path.
+pub fn get_differ_for_path<P: AsRef<Path>>(_path: P) -> Differ {
+    // TODO: Add other differs for different file extensions.
+    Box::new(text_diff)
+}
+
 impl Drop for Mint {
+    /// Called when the mint goes out of scope to check or update goldenfiles.
     fn drop(&mut self) {
         if thread::panicking() {
             return;
