@@ -1,6 +1,6 @@
 [package]
 name = "goldenfile"
-version = "0.7.1"
+version = "1.0.0"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
 documentation = "https://docs.rs/goldenfile"
@@ -18,4 +18,4 @@ exclude = [
 
 [dependencies]
 difference = "2.0"
-tempdir = "0.3"
+tempdir = "0.3.7"
