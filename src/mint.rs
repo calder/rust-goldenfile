@@ -46,20 +46,14 @@ impl Mint {
 
     /// Create a new goldenfile using a differ inferred from the file extension.
     ///
-    /// The returned File is actually a temporary file, not the goldenfile
-    /// itself. When the Mint goes out of scope, it checks the contents of the
-    /// temporary file against the real goldenfile and panics if they differ.
-    ///
-    /// If `REGENERATE_GOLDENFILES=1` is set in the environment, the Mint will
-    /// instead overwrite the goldenfile with the contents of the temporary
-    /// file.
+    /// The returned File is a temporary file, not the goldenfile itself.
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
         self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
     }
 
     /// Create a new goldenfile with the specified diff function.
     ///
-    /// See Mint::new_goldenfile() for details.
+    /// The returned File is a temporary file, not the goldenfile itself.
     pub fn new_goldenfile_with_differ<P: AsRef<Path>>(
         &mut self,
         path: P,
@@ -82,7 +76,7 @@ impl Mint {
 
     /// Check new goldenfile contents against old, and panic if they differ.
     ///
-    /// This is called automatically when a Mint goes out of scope and
+    /// Called automatically when a Mint goes out of scope and
     /// `REGENERATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
         for &(ref file, ref differ) in &self.files {
@@ -100,7 +94,7 @@ impl Mint {
 
     /// Overwrite old goldenfile contents with their new contents.
     ///
-    /// This is called automatically when a Mint goes out of scope and
+    /// Called automatically when a Mint goes out of scope and
     /// `REGENERATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
         for &(ref file, _) in &self.files {
