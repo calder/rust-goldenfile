@@ -50,6 +50,12 @@ impl Mint {
         self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
     }
 
+    /// Create a new goldenfile with a binary differ. See
+    /// Mint::new_goldenfile_with_differ for full documentation.
+    pub fn new_binary_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
+        self.new_goldenfile_with_differ(&path, Box::new(binary_diff))
+    }
+
     /// Create a new goldenfile with the specified diff function.
     ///
     /// The returned file is actually a temporary file, not the goldenfile
