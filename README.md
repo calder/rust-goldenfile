@@ -1,9 +1,12 @@
-# Rust Goldenfile &emsp; [![Latest Version](https://img.shields.io/crates/v/goldenfile.svg)](https://crates.io/crates/goldenfile) [![Build Status](https://api.travis-ci.org/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile) [![Coverage Stats](https://codecov.io/gh/calder/rust-goldenfile/branch/master/graph/badge.svg)](https://codecov.io/gh/calder/rust-goldenfile)
+# 👑 Rust Goldenfile
 
+[![Latest Version](https://img.shields.io/crates/v/goldenfile.svg)](https://crates.io/crates/goldenfile) [![Build Status](https://api.travis-ci.org/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile) [![Coverage Stats](https://codecov.io/gh/calder/rust-goldenfile/branch/master/graph/badge.svg)](https://codecov.io/gh/calder/rust-goldenfile)
 
-**Simple goldenfile testing in Rust**
+**Simple goldenfile testing in Rust.**
 
 [Goldenfile](https://softwareengineering.stackexchange.com/questions/358786/what-is-golden-files) tests generate one or more output files as they run. At the end of the test, the generated files are compared to checked-in "golden" files produced by previous runs. This ensures that all changes to goldenfiles are intentional, explicit, and version controlled.
+
+You can use goldenfiles to test the output of a parser, the order of a graph traversal, the results of a simulation, or anything else that shouldn't change without a human's approval.
 
 ## Usage
 
@@ -35,10 +38,6 @@ fn test() {
     //
 }
 ```
-
-## Why Goldenfiles?
-
-Goldenfiles often get a bad rap. Used sparingly, they provide simple, insightful tests of a program's operation. You can use them to test the output of a parser, the order of a graph traversal, the results of a simulation, or anything else that shouldn't change without a human's approval.
 
 ## Contributing
 
