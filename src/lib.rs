@@ -1,11 +1,9 @@
 //! This library provides a simple API for goldenfile testing.
 //!
 //! Goldenfile tests generate one or more output files as they run. At the end
-//! of the test, these output files are compared to the same files produced by
-//! previous runs. This ensures that:
-//!
-//!  1. Goldenfiles cannot change accidentally.
-//!  2. All changes are explicit and version controlled.
+//! of the test, the generated files are compared to checked-in "golden" files
+//! produced by previous runs. This ensures that all changes to goldenfiles are
+//! intentional, explicit, and version controlled.
 //!
 //! # Example
 //!
@@ -22,8 +20,10 @@
 //!   write!(file2, "Bar").unwrap();
 //!
 //!   // When the Mint goes out of scope, it will check the new contents of file1
-//!   // and file2 against their old (golden) contents and fail the test if they
-//!   // differ. The original contents will not be modified unless you run:
+//!   // and file2 against their version controlled "golden" contents and fail the
+//!   // test if they differ.
+//!   //
+//!   // To update the goldenfiles themselves, run:
 //!   //
 //!   //     env REGENERATE_GOLDENFILES=1 cargo test
 //!   //
@@ -32,7 +32,6 @@
 
 #![deny(missing_docs)]
 
-#[macro_use(assert_diff)]
 extern crate difference;
 
 extern crate tempdir;

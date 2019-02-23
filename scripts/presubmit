@@ -7,7 +7,7 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 RESET=`tput sgr0`
 
-cargo fmt -- --write-mode diff \
+cargo fmt -- --check \
     || { echo "\n${RED}ERROR${RESET}: Must run \`cargo fmt\` before submitting."; exit 1; }
 
 cargo test || exit 1

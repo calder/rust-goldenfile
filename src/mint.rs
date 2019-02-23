@@ -44,16 +44,12 @@ impl Mint {
         return mint;
     }
 
-    /// Create a new goldenfile. See Mint::new_goldenfile_with_differ for full
-    /// documentation. This function infers a differ from the file's extension.
+    /// Create a new goldenfile using a differ inferred from the file extension.
+    ///
+    /// See [new_goldenfile_with_differ](method.new_goldenfile_with_differ)
+    /// for full documentation.
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
         self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
-    }
-
-    /// Create a new goldenfile with a binary differ. See
-    /// Mint::new_goldenfile_with_differ for full documentation.
-    pub fn new_binary_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
-        self.new_goldenfile_with_differ(&path, Box::new(binary_diff))
     }
 
     /// Create a new goldenfile with the specified diff function.
@@ -117,8 +113,17 @@ impl Mint {
 
 /// Get the diff function to use for a given file path.
 pub fn get_differ_for_path<P: AsRef<Path>>(_path: P) -> Differ {
-    // TODO: Add other differs for different file extensions.
-    Box::new(text_diff)
+    match _path.as_ref().extension() {
+        Some(os_str) => match os_str.to_str() {
+            Some("bin") => Box::new(binary_diff),
+            Some("exe") => Box::new(binary_diff),
+            Some("gz") => Box::new(binary_diff),
+            Some("tar") => Box::new(binary_diff),
+            Some("zip") => Box::new(binary_diff),
+            _ => Box::new(text_diff),
+        },
+        _ => Box::new(text_diff),
+    }
 }
 
 impl Drop for Mint {
