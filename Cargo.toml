@@ -17,5 +17,5 @@ exclude = [
 ]
 
 [dependencies]
-difference = ">=2"
-tempfile = ""
+difference = "2"
+tempfile = "3"
