@@ -1,19 +1,23 @@
-#!/bin/sh
+#!/bin/bash -e
 
-cd "`dirname "$0"`/.."
+function check_readme() {
+    perl -0777 -pe 's/.*## '"$3"'\n\n```rust\n(.*)```.*/$1/s' $1 \
+        | colordiff $2 - \
+        || { printf "\n${RED}ERROR${RESET}: $3 in $1 differs from $1.\n"; exit 1; }
+}
+
+cd "$(dirname "$0")/.."
 
 # Colors
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-RESET=`tput sgr0`
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+RESET="$(tput sgr0)"
 
 cargo fmt -- --check \
-    || { echo "\n${RED}ERROR${RESET}: Must run \`cargo fmt\` before submitting."; exit 1; }
+    || { printf "\n${RED}ERROR${RESET}: Must run \`cargo fmt\` before submitting.\n"; exit 1; }
 
-cargo test || exit 1
+cargo test
 
-perl -0777 -pe 's/.*## Usage\n\n```rust\n(.*)```.*/$1/s' README.md \
-    | colordiff tests/usage.rs - \
-    || { echo "\n${RED}ERROR${RESET}: Usage in README.md differs from tests/usage.rs."; exit 1; }
+check_readme README.md tests/readme_usage.rs "Usage"
 
-echo "Presubmits ${GREEN}PASSED${RESET}.\n"
+printf "\nPresubmits ${GREEN}PASSED${RESET}.\n"
