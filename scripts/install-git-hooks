@@ -1,7 +1,14 @@
-#!/bin/sh
+#!/bin/bash -e
 
-cd "`dirname "$0"`"/../.git
+cd "$(dirname "$0")/.."
 
-BACKUP="hooks.bac`ls -d hooks.bac* 2> /dev/null | wc -l | tr -d ' '`"
-mv hooks $BACKUP
-ln -s ../scripts/git-hooks hooks
+# Colors
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+RESET="$(tput sgr0)"
+
+BACKUP=".git/hooks.bac$(ls -d .git/hooks.bac* 2> /dev/null | wc -l | tr -d ' ')"
+mv ".git/hooks" "$BACKUP"
+ln -s "scripts/git-hooks" ".git/hooks"
+
+printf "Git hooks ${GREEN}INSTALLED${RESET}.\n"

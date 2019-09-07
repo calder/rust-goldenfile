@@ -41,6 +41,6 @@ fn test() {
 
 ## Contributing
 
-Feel free to submit pull requests for new and better differs or anything else that's missing!
+Feel free to submit pull requests for new and better differs or other improvements! Run `scripts/install-git-hooks` to install pre-commit test and formatting hooks.
 
 This project follows the Rust community's [Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct).
