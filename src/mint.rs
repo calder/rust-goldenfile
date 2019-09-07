@@ -7,9 +7,9 @@ use std::io::{Error, ErrorKind, Result};
 use std::path::{Path, PathBuf};
 use std::thread;
 
-use tempdir::TempDir;
+use tempfile::TempDir;
 
-use differs::*;
+use crate::differs::*;
 
 /// A Mint creates goldenfiles.
 ///
@@ -31,7 +31,7 @@ impl Mint {
     ///
     /// All goldenfiles will be created in the Mint's directory.
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
-        let tempdir = TempDir::new("rust-goldenfiles").unwrap();
+        let tempdir = TempDir::new().unwrap();
         let mint = Mint {
             path: path.as_ref().to_path_buf(),
             files: vec![],

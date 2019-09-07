@@ -32,10 +32,6 @@
 
 #![deny(missing_docs)]
 
-extern crate difference;
-
-extern crate tempdir;
-
 pub mod differs;
 pub mod mint;
 
