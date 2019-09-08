@@ -3,7 +3,7 @@
 function check_readme() {
     perl -0777 -pe 's/.*## '"$3"'\n\n```rust\n(.*)```.*/$1/s' $1 \
         | colordiff $2 - \
-        || { printf "\n${RED}ERROR${RESET}: $3 in $1 differs from $1.\n"; exit 1; }
+        || { printf "\n${RED}ERROR${RESET}: $3 in $1 differs from $2.\n"; exit 1; }
 }
 
 cd "$(dirname "$0")/.."
