@@ -35,13 +35,11 @@ impl Mint {
         let mint = Mint {
             path: path.as_ref().to_path_buf(),
             files: vec![],
-            tempdir: tempdir,
+            tempdir,
         };
-        fs::create_dir_all(&mint.path).expect(&format!(
-            "Failed to create goldenfile directory {:?}",
-            mint.path
-        ));
-        return mint;
+        fs::create_dir_all(&mint.path)
+            .unwrap_or_else(|_| panic!("Failed to create goldenfile directory {:?}", mint.path));
+        mint
     }
 
     /// Create a new goldenfile using a differ inferred from the file extension.
@@ -67,7 +65,7 @@ impl Mint {
         }
 
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
-        let maybe_file = File::create(abs_path.clone());
+        let maybe_file = File::create(abs_path);
         if maybe_file.is_ok() {
             self.files.push((path.as_ref().to_path_buf(), differ));
         }
@@ -102,7 +100,8 @@ impl Mint {
             let new = self.tempdir.path().join(&file);
 
             println!("Updating {:?}.", file.to_str().unwrap());
-            fs::copy(&new, &old).expect(&format!("Error copying {:?} to {:?}.", &new, &old));
+            fs::copy(&new, &old)
+                .unwrap_or_else(|_| panic!("Error copying {:?} to {:?}.", &new, &old));
         }
     }
 }
