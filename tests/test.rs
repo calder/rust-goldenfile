@@ -35,6 +35,17 @@ fn binary_match() {
 }
 
 #[test]
+fn subdir() {
+    fs::create_dir_all("tests/goldenfiles/subdir").unwrap();
+    write_text_file("tests/goldenfiles/subdir/file1.txt", "File in subdir");
+
+    let mut mint = Mint::new("tests/goldenfiles");
+    let mut file1 = mint.new_goldenfile("subdir/file1.txt").unwrap();
+
+    write!(file1, "File in subdir").unwrap();
+}
+
+#[test]
 #[should_panic(expected = "File sizes differ: Old file is 2 bytes, new file is 3 bytes")]
 fn binary_size_diff() {
     write_binary_file("tests/goldenfiles/binary_size_diff.bin", b"\x00\x01");
