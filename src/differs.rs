@@ -8,7 +8,7 @@ use std::path::Path;
 use difference;
 
 /// A function that displays a diff and panics if two files to not match.
-pub type Differ = Box<Fn(&Path, &Path)>;
+pub type Differ = Box<dyn Fn(&Path, &Path)>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
@@ -40,7 +40,7 @@ fn open_file(path: &Path) -> File {
     check_io(File::open(path), "opening file", path)
 }
 
-fn file_byte_iter<'a>(path: &'a Path) -> impl Iterator<Item = u8> + 'a {
+fn file_byte_iter(path: &Path) -> impl Iterator<Item = u8> + '_ {
     BufReader::new(open_file(path))
         .bytes()
         .map(move |b| check_io(b, "reading file", path))
