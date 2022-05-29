@@ -1,6 +1,6 @@
 # 👑 Rust Goldenfile
 
-[![Documentation](https://docs.rs/goldenfile/badge.svg)](https://docs.rs/goldenfile) [![Latest Version](https://img.shields.io/crates/v/goldenfile.svg)](https://crates.io/crates/goldenfile) [![Build Status](https://travis-ci.org/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile) [![Coverage Status](https://coveralls.io/repos/github/calder/rust-goldenfile/badge.svg?branch=master)](https://coveralls.io/github/calder/rust-goldenfile?branch=master)
+[![Documentation](https://docs.rs/goldenfile/badge.svg)](https://docs.rs/goldenfile) [![Latest Version](https://img.shields.io/crates/v/goldenfile.svg)](https://crates.io/crates/goldenfile) [![Build Status](https://app.travis-ci.com/calder/rust-goldenfile.svg?branch=master)](https://travis-ci.org/calder/rust-goldenfile) [![Coverage Status](https://coveralls.io/repos/github/calder/rust-goldenfile/badge.svg?branch=master)](https://coveralls.io/github/calder/rust-goldenfile?branch=master)
 
 **Simple goldenfile testing in Rust.**
 
