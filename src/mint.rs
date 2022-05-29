@@ -83,7 +83,7 @@ impl Mint {
 
             println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
             println!("To regenerate the goldenfile, run");
-            println!("    env REGENERATE_GOLDENFILES=1 cargo test");
+            println!("    REGENERATE_GOLDENFILES=1 cargo test");
             println!("------------------------------------------------------------");
             differ(&old, &new);
             println!("<NO DIFFERENCE>");

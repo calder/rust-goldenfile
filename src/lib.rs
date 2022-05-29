@@ -25,7 +25,7 @@
 //!   //
 //!   // To update the goldenfiles themselves, run:
 //!   //
-//!   //     env REGENERATE_GOLDENFILES=1 cargo test
+//!   //     REGENERATE_GOLDENFILES=1 cargo test
 //!   //
 //! }
 //! ```
