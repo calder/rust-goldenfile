@@ -8,7 +8,6 @@ documentation = "https://docs.rs/goldenfile"
 repository = "https://github.com/calder/rust-goldenfile"
 readme = "README.md"
 license = "MIT"
-license-file = "LICENSE"
 authors = ["Calder Coalson <caldercoalson@gmail.com>"]
 
 exclude = [
