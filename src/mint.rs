@@ -65,6 +65,13 @@ impl Mint {
         }
 
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
+        if let Some(abs_parent) = abs_path.parent() {
+            if abs_parent != self.tempdir.path() {
+                fs::create_dir_all(&abs_parent).unwrap_or_else(|_| {
+                    panic!("Failed to create temporary subdirectory {:?}", abs_parent)
+                });
+            }
+        }
         let maybe_file = File::create(abs_path);
         if maybe_file.is_ok() {
             self.files.push((path.as_ref().to_path_buf(), differ));
