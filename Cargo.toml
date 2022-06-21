@@ -16,5 +16,5 @@ exclude = [
 ]
 
 [dependencies]
-difference = "2"
+similar-asserts = "1.2.0"
 tempfile = "3"
