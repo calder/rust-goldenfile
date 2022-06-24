@@ -1,5 +1,3 @@
-//! This library provides a simple API for goldenfile testing.
-//!
 //! Goldenfile tests generate one or more output files as they run. At the end
 //! of the test, the generated files are compared to checked-in "golden" files
 //! produced by previous runs. This ensures that all changes to goldenfiles are
