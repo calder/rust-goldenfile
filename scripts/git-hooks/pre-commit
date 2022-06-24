@@ -1,6 +1,0 @@
-#!/bin/sh
-
-cd "`dirname "$0"`"/../..
-exec 1>&2
-
-scripts/presubmit

@@ -27,20 +27,16 @@ fn test() {
     write!(file1, "World!").unwrap();
     write!(file2, "Foo").unwrap();
     write!(file2, "Bar").unwrap();
-
-    // When the Mint goes out of scope, it will check the new contents of file1
-    // and file2 against their version controlled "golden" contents and fail the
-    // test if they differ.
-    //
-    // To update the goldenfiles themselves, run:
-    //
-    //     REGENERATE_GOLDENFILES=1 cargo test
-    //
 }
+```
+
+When the `Mint` goes out of scope, it will compare the contents of each file to its checked-in "golden" version and fail the test if they differ. To update the check-in versions, run:
+```sh
+REGENERATE_GOLDENFILES=1 cargo test
 ```
 
 ## Contributing
 
-Feel free to submit pull requests for new and better differs or other improvements! Run `scripts/install-git-hooks` to install pre-commit test and formatting hooks.
+Pull requests are welcome! Run `dev/install-git-hooks` to install pre-commit test and formatting hooks.
 
 This project follows the Rust community's [Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct).

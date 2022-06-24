@@ -9,6 +9,6 @@ RESET="$(tput sgr0)"
 
 BACKUP=".git/hooks.bac$(ls -d .git/hooks.bac* 2> /dev/null | wc -l | tr -d ' ')"
 mv ".git/hooks" "$BACKUP"
-ln -s "../scripts/git-hooks" ".git/hooks"
+ln -s "../dev/git-hooks" ".git/hooks"
 
 printf "Git hooks ${GREEN}INSTALLED${RESET}.\n"

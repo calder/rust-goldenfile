@@ -14,13 +14,4 @@ fn test() {
     write!(file1, "World!").unwrap();
     write!(file2, "Foo").unwrap();
     write!(file2, "Bar").unwrap();
-
-    // When the Mint goes out of scope, it will check the new contents of file1
-    // and file2 against their version controlled "golden" contents and fail the
-    // test if they differ.
-    //
-    // To update the goldenfiles themselves, run:
-    //
-    //     REGENERATE_GOLDENFILES=1 cargo test
-    //
 }
