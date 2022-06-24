@@ -5,14 +5,14 @@ use std::io;
 use std::io::{BufReader, Read};
 use std::path::Path;
 
-use difference;
+use similar_asserts;
 
 /// A function that displays a diff and panics if two files to not match.
 pub type Differ = Box<dyn Fn(&Path, &Path)>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
-    difference::assert_diff!(&read_file(old), &read_file(new), "\n", 0);
+    similar_asserts::assert_str_eq!(&read_file(old), &read_file(new));
 }
 
 /// Panic if binary files differ with some basic information about where they
