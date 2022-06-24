@@ -14,20 +14,16 @@
 //!   let mut file1 = mint.new_goldenfile("file1.txt").unwrap();
 //!   let mut file2 = mint.new_goldenfile("file2.txt").unwrap();
 //!
-//!   write!(file1, "Hello ").unwrap();
-//!   write!(file1, "World!").unwrap();
-//!   write!(file2, "Foo").unwrap();
-//!   write!(file2, "Bar").unwrap();
-//!
-//!   // When the Mint goes out of scope, it will check the new contents of file1
-//!   // and file2 against their version controlled "golden" contents and fail the
-//!   // test if they differ.
-//!   //
-//!   // To update the goldenfiles themselves, run:
-//!   //
-//!   //     REGENERATE_GOLDENFILES=1 cargo test
-//!   //
+//!   write!(file1, "Hello world!").unwrap();
+//!   write!(file2, "Foo bar!").unwrap();
 //! }
+//! ```
+//!
+//! When the `Mint` goes out of scope, it will compare the contents of each file
+//! to its checked-in "golden" version and fail the test if they differ. To
+//! update the check-in versions, run:
+//! ```sh
+//! REGENERATE_GOLDENFILES=1 cargo test
 //! ```
 
 #![deny(missing_docs)]
