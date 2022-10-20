@@ -61,5 +61,5 @@ fn read_file(path: &Path) -> String {
 }
 
 fn check_io<T>(x: Result<T, io::Error>, message: &str, path: &Path) -> T {
-    x.unwrap_or_else(|_| panic!("Error {}: {:?}", message, path))
+    x.unwrap_or_else(|err| panic!("Error {} {:?}: {:?}", message, path, err))
 }

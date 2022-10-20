@@ -38,7 +38,7 @@ impl Mint {
             tempdir,
         };
         fs::create_dir_all(&mint.path)
-            .unwrap_or_else(|_| panic!("Failed to create goldenfile directory {:?}", mint.path));
+            .unwrap_or_else(|err| panic!("Failed to create goldenfile directory {:?}: {:?}", mint.path, err));
         mint
     }
 
@@ -67,8 +67,8 @@ impl Mint {
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
         if let Some(abs_parent) = abs_path.parent() {
             if abs_parent != self.tempdir.path() {
-                fs::create_dir_all(&abs_parent).unwrap_or_else(|_| {
-                    panic!("Failed to create temporary subdirectory {:?}", abs_parent)
+                fs::create_dir_all(&abs_parent).unwrap_or_else(|err| {
+                    panic!("Failed to create temporary subdirectory {:?}: {:?}", abs_parent, err)
                 });
             }
         }
@@ -108,7 +108,7 @@ impl Mint {
 
             println!("Updating {:?}.", file.to_str().unwrap());
             fs::copy(&new, &old)
-                .unwrap_or_else(|_| panic!("Error copying {:?} to {:?}.", &new, &old));
+                .unwrap_or_else(|err| panic!("Error copying {:?} to {:?}: {:?}", &new, &old, err));
         }
     }
 }
