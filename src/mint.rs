@@ -37,8 +37,12 @@ impl Mint {
             files: vec![],
             tempdir,
         };
-        fs::create_dir_all(&mint.path)
-            .unwrap_or_else(|err| panic!("Failed to create goldenfile directory {:?}: {:?}", mint.path, err));
+        fs::create_dir_all(&mint.path).unwrap_or_else(|err| {
+            panic!(
+                "Failed to create goldenfile directory {:?}: {:?}",
+                mint.path, err
+            )
+        });
         mint
     }
 
@@ -68,7 +72,10 @@ impl Mint {
         if let Some(abs_parent) = abs_path.parent() {
             if abs_parent != self.tempdir.path() {
                 fs::create_dir_all(&abs_parent).unwrap_or_else(|err| {
-                    panic!("Failed to create temporary subdirectory {:?}: {:?}", abs_parent, err)
+                    panic!(
+                        "Failed to create temporary subdirectory {:?}: {:?}",
+                        abs_parent, err
+                    )
                 });
             }
         }
