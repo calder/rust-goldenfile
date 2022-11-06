@@ -12,7 +12,7 @@ pub type Differ = Box<dyn Fn(&Path, &Path)>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
-    similar_asserts::assert_str_eq!(&read_file(old), &read_file(new));
+    similar_asserts::assert_eq!(&read_file(old), &read_file(new));
 }
 
 /// Panic if binary files differ with some basic information about where they
