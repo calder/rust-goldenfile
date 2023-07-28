@@ -30,7 +30,7 @@ fn test() {
 
 When the `Mint` goes out of scope, it will compare the contents of each file to its checked-in "golden" version and fail the test if they differ. To update the check-in versions, run:
 ```sh
-REGENERATE_GOLDENFILES=1 cargo test
+UPDATE_GOLDENFILES=1 cargo test
 ```
 
 ## Contributing

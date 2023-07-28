@@ -14,11 +14,11 @@ use crate::differs::*;
 /// A Mint creates goldenfiles.
 ///
 /// When a Mint goes out of scope, it will do one of two things depending on the
-/// value of the `REGENERATE_GOLDENFILES` environment variable:
+/// value of the `UPDATE_GOLDENFILES` environment variable:
 ///
-///   1. If `REGENERATE_GOLDENFILES!=1`, it will check the new goldenfile
+///   1. If `UPDATE_GOLDENFILES!=1`, it will check the new goldenfile
 ///      contents against their old contents, and panic if they differ.
-///   2. If `REGENERATE_GOLDENFILES=1`, it will replace the old goldenfile
+///   2. If `UPDATE_GOLDENFILES=1`, it will replace the old goldenfile
 ///      contents with the newly written contents.
 pub struct Mint {
     path: PathBuf,
@@ -89,7 +89,7 @@ impl Mint {
     /// Check new goldenfile contents against old, and panic if they differ.
     ///
     /// Called automatically when a Mint goes out of scope and
-    /// `REGENERATE_GOLDENFILES!=1`.
+    /// `UPDATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
         for &(ref file, ref differ) in &self.files {
             let old = self.path.join(&file);
@@ -97,7 +97,7 @@ impl Mint {
 
             println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
             println!("To regenerate the goldenfile, run");
-            println!("    REGENERATE_GOLDENFILES=1 cargo test");
+            println!("    UPDATE_GOLDENFILES=1 cargo test");
             println!("------------------------------------------------------------");
             differ(&old, &new);
             println!("<NO DIFFERENCE>");
@@ -107,7 +107,7 @@ impl Mint {
     /// Overwrite old goldenfile contents with their new contents.
     ///
     /// Called automatically when a Mint goes out of scope and
-    /// `REGENERATE_GOLDENFILES=1`.
+    /// `UPDATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
         for &(ref file, _) in &self.files {
             let old = self.path.join(&file);
@@ -141,8 +141,12 @@ impl Drop for Mint {
         if thread::panicking() {
             return;
         }
-        let regen_var = env::var("REGENERATE_GOLDENFILES");
-        if regen_var.is_ok() && regen_var.unwrap() == "1" {
+        // For backwards compatibility with 1.4 and below.
+        let legacy_var = env::var("REGENERATE_GOLDENFILES");
+        let update_var = env::var("UPDATE_GOLDENFILES");
+        if (legacy_var.is_ok() && legacy_var.unwrap() == "1")
+            || (update_var.is_ok() && update_var.unwrap() == "1")
+        {
             self.update_goldenfiles();
         } else {
             self.check_goldenfiles();
