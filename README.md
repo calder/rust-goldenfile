@@ -35,6 +35,4 @@ UPDATE_GOLDENFILES=1 cargo test
 
 ## Contributing
 
-Pull requests are welcome! Run `dev/install-git-hooks` to install pre-commit test and formatting hooks.
-
-This project follows the Rust community's [Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct).
+Pull requests are welcome! This project follows the Rust community's [Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct).
