@@ -1,7 +1,6 @@
-//! Goldenfile tests generate one or more output files as they run. At the end
-//! of the test, the generated files are compared to checked-in "golden" files
-//! produced by previous runs. This ensures that all changes to goldenfiles are
-//! intentional, explicit, and version controlled.
+//! Goldenfile tests generate one or more output files as they run. If any files
+//! differ from their checked-in "golden" version, the test fails. This ensures
+//! that behavioral changes are intentional, explicit, and version controlled.
 //!
 //! # Example
 //!
@@ -17,8 +16,8 @@
 //! }
 //! ```
 //!
-//! When the `Mint` goes out of scope, it will compare the contents of each file
-//! to its checked-in "golden" version and fail the test if they differ. To
+//! When the `Mint` goes out of scope, it compares the contents of each file
+//! to its checked-in golden version and fails the test if they differ. To
 //! update the check-in versions, run:
 //! ```sh
 //! UPDATE_GOLDENFILES=1 cargo test

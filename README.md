@@ -4,9 +4,9 @@
 
 **Simple goldenfile testing in Rust.**
 
-[Goldenfile](https://softwareengineering.stackexchange.com/questions/358786/what-is-golden-files) tests generate one or more output files as they run. At the end of the test, the generated files are compared to checked-in "golden" files produced by previous runs. This ensures that all changes to goldenfiles are intentional, explicit, and version controlled.
+[Goldenfile](https://softwareengineering.stackexchange.com/questions/358786/what-is-golden-files) tests generate one or more output files as they run. If any files differ from their checked-in "golden" version, the test fails. This ensures that behavioral changes are intentional, explicit, and version controlled.
 
-You can use goldenfiles to test the output of a parser, the order of a graph traversal, the result of a simulation, or anything else that shouldn't change without a human's approval.
+You can use goldenfiles to test the output of a parser, the order of a graph traversal, the result of a simulation, or anything else that should only change with human review.
 
 ## Usage
 
@@ -28,7 +28,7 @@ fn test() {
 }
 ```
 
-When the `Mint` goes out of scope, it will compare the contents of each file to its checked-in "golden" version and fail the test if they differ. To update the check-in versions, run:
+When the `Mint` goes out of scope, it compares the contents of each file to its checked-in golden version and fails the test if they differ. To update the check-in versions, run:
 ```sh
 UPDATE_GOLDENFILES=1 cargo test
 ```
