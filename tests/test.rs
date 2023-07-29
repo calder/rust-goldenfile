@@ -63,6 +63,19 @@ fn text_diff() {
 }
 
 #[test]
+#[should_panic(expected = "Permission denied")]
+fn permission_denied() {
+    Mint::new("/foobar");
+}
+
+#[test]
+#[should_panic(expected = "Path must be relative")]
+fn absolute_path() {
+    let mut mint = Mint::new("tests/goldenfiles");
+    mint.new_goldenfile("/bar").unwrap();
+}
+
+#[test]
 #[should_panic(expected = "assertion failed")]
 fn external_panic() {
     let mut mint = Mint::new("tests/goldenfiles");
