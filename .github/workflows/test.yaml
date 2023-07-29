@@ -23,7 +23,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: curl -L https://github.com/xd009642/tarpaulin/releases/download/0.26.1/cargo-tarpaulin-x86_64-unknown-linux-gnu.tar.gz | tar xzf - && mv cargo-tarpaulin ~/.cargo/bin
       - run: cargo tarpaulin --all-features --out=xml
-      # - uses: coverallsapp/github-action@v2
+      - uses: coverallsapp/github-action@v2
       - uses: codecov/codecov-action@v1.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
