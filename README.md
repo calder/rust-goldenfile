@@ -28,7 +28,7 @@ fn test() {
 }
 ```
 
-When the `Mint` goes out of scope, it compares the contents of each file to its checked-in golden version and fails the test if they differ. To update the check-in versions, run:
+When the `Mint` goes out of scope, it compares the contents of each file to its checked-in golden version and fails the test if they differ. To update the checked-in versions, run:
 ```sh
 UPDATE_GOLDENFILES=1 cargo test
 ```
