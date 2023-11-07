@@ -1,6 +1,6 @@
 [package]
 name = "goldenfile"
-version = "1.5.2"
+version = "1.6.0"
 edition = "2021"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
@@ -16,5 +16,7 @@ exclude = [
 ]
 
 [dependencies]
+scopeguard = "1.2"
 similar-asserts = "1.4"
 tempfile = "3"
+yansi = "1.0.0-rc.1"

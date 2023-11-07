@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 use std::thread;
 
 use tempfile::TempDir;
+use yansi::Paint;
 
 use crate::differs::*;
 
@@ -94,13 +95,15 @@ impl Mint {
         for &(ref file, ref differ) in &self.files {
             let old = self.path.join(&file);
             let new = self.tempdir.path().join(&file);
-
-            println!("\nGoldenfile diff for {:?}:", file.to_str().unwrap());
-            println!("To regenerate the goldenfile, run");
-            println!("    UPDATE_GOLDENFILES=1 cargo test");
-            println!("------------------------------------------------------------");
+            defer_on_unwind! {
+                eprintln!("note: run with `UPDATE_GOLDENFILES=1` to update goldenfiles");
+                eprintln!(
+                    "{}: goldenfile changed: {}",
+                    "error".bold().red(),
+                    file.to_str().unwrap()
+                );
+            }
             differ(&old, &new);
-            println!("<NO DIFFERENCE>");
         }
     }
 

@@ -20,7 +20,7 @@ fn subdir() {
     let mut mint = Mint::new("tests/goldenfiles");
     let mut file1 = mint.new_goldenfile("subdir/file1.txt").unwrap();
 
-    write!(file1, "File in subdir").unwrap();
+    writeln!(file1, "File in subdir").unwrap();
 }
 
 #[test]
@@ -47,8 +47,8 @@ fn text_match() {
     let mut file1 = mint.new_goldenfile("match1.txt").unwrap();
     let mut file2 = mint.new_goldenfile("match2.txt").unwrap();
 
-    write!(file1, "Hello world!").unwrap();
-    write!(file2, "foobar").unwrap();
+    writeln!(file1, "Hello world!").unwrap();
+    writeln!(file2, "foobar").unwrap();
 }
 
 #[test]
@@ -58,8 +58,8 @@ fn text_diff() {
     let mut file1 = mint.new_goldenfile("text_diff1.txt").unwrap();
     let mut file2 = mint.new_goldenfile("text_diff2.txt").unwrap();
 
-    write!(file1, "Hello world!").unwrap();
-    write!(file2, "monkeybrains").unwrap();
+    writeln!(file1, "Hello world!").unwrap();
+    writeln!(file2, "monkeybrains").unwrap();
 }
 
 #[test]
@@ -75,7 +75,7 @@ fn external_panic() {
     let mut mint = Mint::new("tests/goldenfiles");
     let mut file1 = mint.new_goldenfile("panic.txt").unwrap();
 
-    write!(file1, "new").unwrap();
+    writeln!(file1, "new").unwrap();
     assert!(false);
 }
 
@@ -88,8 +88,8 @@ fn update() {
     let mut file1 = mint.new_goldenfile("update_env1.txt").unwrap();
     let mut file2 = mint.new_goldenfile("update_env2.txt").unwrap();
 
-    write!(file1, "Hello world!").unwrap();
-    write!(file2, "foobar").unwrap();
+    writeln!(file1, "Hello world!").unwrap();
+    writeln!(file2, "foobar").unwrap();
 
     mint.update_goldenfiles()
 }

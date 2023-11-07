@@ -25,6 +25,9 @@
 
 #![deny(missing_docs)]
 
+#[macro_use(defer_on_unwind)]
+extern crate scopeguard;
+
 pub mod differs;
 pub mod mint;
 
