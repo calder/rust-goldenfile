@@ -132,7 +132,7 @@ impl Mint {
                 fs::copy(&new, &old).unwrap_or_else(|err| {
                     panic!("Error copying {:?} to {:?}: {:?}", &new, &old, err)
                 });
-            } else {
+            } else if old.exists() {
                 std::fs::remove_file(&old).unwrap();
             }
         }

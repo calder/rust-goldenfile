@@ -61,7 +61,7 @@ checksum = "658bd65b1cf4c852a3cc96f18a8ce7b5640f6b703f905c7d74532294c2a63984"
 
 [[package]]
 name = "goldenfile"
-version = "1.6.1"
+version = "1.7.0"
 dependencies = [
  "scopeguard",
  "similar-asserts",
