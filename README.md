@@ -11,21 +11,15 @@ You can use goldenfiles to test the output of a parser, the order of a graph tra
 ## Usage
 
 ```rust
-extern crate goldenfile;
-
+use goldenfile::Mint;
 use std::io::Write;
 
-use goldenfile::Mint;
+let mut mint = Mint::new("tests/goldenfiles");
+let mut file1 = mint.new_goldenfile("file1.txt").unwrap();
+let mut file2 = mint.new_goldenfile("file2.txt").unwrap();
 
-#[test]
-fn test() {
-    let mut mint = Mint::new("tests/goldenfiles");
-    let mut file1 = mint.new_goldenfile("file1.txt").unwrap();
-    let mut file2 = mint.new_goldenfile("file2.txt").unwrap();
-
-    writeln!(file1, "Hello world!").unwrap();
-    writeln!(file2, "Foo bar!").unwrap();
-}
+writeln!(file1, "Hello world!").unwrap();
+writeln!(file2, "Foo bar!").unwrap();
 ```
 
 When the `Mint` goes out of scope, it compares the contents of each file to its checked-in golden version and fails the test if they differ. To update the checked-in versions, run:

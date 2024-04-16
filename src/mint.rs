@@ -82,7 +82,7 @@ impl Mint {
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
         if let Some(abs_parent) = abs_path.parent() {
             if abs_parent != self.tempdir.path() {
-                fs::create_dir_all(&abs_parent).unwrap_or_else(|err| {
+                fs::create_dir_all(abs_parent).unwrap_or_else(|err| {
                     panic!(
                         "Failed to create temporary subdirectory {:?}: {:?}",
                         abs_parent, err
@@ -102,9 +102,9 @@ impl Mint {
     /// Called automatically when a Mint goes out of scope and
     /// `UPDATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
-        for &(ref file, ref differ) in &self.files {
-            let old = self.path.join(&file);
-            let new = self.tempdir.path().join(&file);
+        for (file, differ) in &self.files {
+            let old = self.path.join(file);
+            let new = self.tempdir.path().join(file);
             defer_on_unwind! {
                 eprintln!("note: run with `UPDATE_GOLDENFILES=1` to update goldenfiles");
                 eprintln!(
@@ -122,9 +122,9 @@ impl Mint {
     /// Called automatically when a Mint goes out of scope and
     /// `UPDATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
-        for &(ref file, _) in &self.files {
-            let old = self.path.join(&file);
-            let new = self.tempdir.path().join(&file);
+        for (file, _) in &self.files {
+            let old = self.path.join(file);
+            let new = self.tempdir.path().join(file);
 
             let empty = File::open(&new).unwrap().metadata().unwrap().len() == 0;
             if self.create_empty || !empty {

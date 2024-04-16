@@ -5,15 +5,15 @@
 //! # Example
 //!
 //! ```rust
-//! #[test]
-//! fn test() {
-//!   let mut mint = Mint::new("tests/goldenfiles");
-//!   let mut file1 = mint.new_goldenfile("file1.txt").unwrap();
-//!   let mut file2 = mint.new_goldenfile("file2.txt").unwrap();
+//! use goldenfile::Mint;
+//! use std::io::Write;
 //!
-//!   write!(file1, "Hello world!").unwrap();
-//!   write!(file2, "Foo bar!").unwrap();
-//! }
+//! let mut mint = Mint::new("tests/goldenfiles");
+//! let mut file1 = mint.new_goldenfile("file1.txt").unwrap();
+//! let mut file2 = mint.new_goldenfile("file2.txt").unwrap();
+//!
+//! writeln!(file1, "Hello world!").unwrap();
+//! writeln!(file2, "Foo bar!").unwrap();
 //! ```
 //!
 //! When the `Mint` goes out of scope, it compares the contents of each file
