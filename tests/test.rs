@@ -93,3 +93,12 @@ fn update() {
 
     mint.update_goldenfiles()
 }
+
+#[test]
+fn nonempty() {
+    let mut mint = Mint::new_nonempty("tests/goldenfiles");
+    let mut file = mint.new_goldenfile("nonempty.txt").unwrap();
+    mint.new_goldenfile("empty.txt").unwrap();
+
+    writeln!(file, "Some content").unwrap();
+}

@@ -1,6 +1,6 @@
 //! Functions for comparing files.
 
-use std::fs::{metadata, File};
+use std::fs;
 use std::io;
 use std::io::{BufReader, Read};
 use std::path::Path;
@@ -12,7 +12,10 @@ pub type Differ = Box<dyn Fn(&Path, &Path)>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
-    similar_asserts::assert_eq!(&read_file(old), &read_file(new));
+    similar_asserts::assert_eq!(
+        &fs::read_to_string(old).unwrap_or("".to_string()),
+        &fs::read_to_string(new).unwrap_or("".to_string()),
+    );
 }
 
 /// Panic if binary files differ with some basic information about where they
@@ -36,8 +39,8 @@ pub fn binary_diff(old: &Path, new: &Path) {
     }
 }
 
-fn open_file(path: &Path) -> File {
-    check_io(File::open(path), "opening file", path)
+fn open_file(path: &Path) -> fs::File {
+    check_io(fs::File::open(path), "opening file", path)
 }
 
 fn file_byte_iter(path: &Path) -> impl Iterator<Item = u8> + '_ {
@@ -47,17 +50,7 @@ fn file_byte_iter(path: &Path) -> impl Iterator<Item = u8> + '_ {
 }
 
 fn file_len(path: &Path) -> u64 {
-    check_io(metadata(path), "getting file length", path).len()
-}
-
-fn read_file(path: &Path) -> String {
-    let mut contents = String::new();
-    check_io(
-        open_file(path).read_to_string(&mut contents),
-        "reading file",
-        path,
-    );
-    contents
+    check_io(fs::metadata(path), "getting file length", path).len()
 }
 
 fn check_io<T>(x: Result<T, io::Error>, message: &str, path: &Path) -> T {

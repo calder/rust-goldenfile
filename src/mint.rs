@@ -25,18 +25,18 @@ pub struct Mint {
     path: PathBuf,
     tempdir: TempDir,
     files: Vec<(PathBuf, Differ)>,
+    create_empty: bool,
 }
 
 impl Mint {
     /// Create a new goldenfile Mint.
-    ///
-    /// All goldenfiles will be created in the Mint's directory.
-    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+    fn new_internal<P: AsRef<Path>>(path: P, create_empty: bool) -> Self {
         let tempdir = TempDir::new().unwrap();
         let mint = Mint {
             path: path.as_ref().to_path_buf(),
             files: vec![],
             tempdir,
+            create_empty,
         };
         fs::create_dir_all(&mint.path).unwrap_or_else(|err| {
             panic!(
@@ -45,6 +45,16 @@ impl Mint {
             )
         });
         mint
+    }
+
+    /// Create a new goldenfile Mint.
+    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        Self::new_internal(path, true)
+    }
+
+    /// Create a new goldenfile Mint. Goldenfiles will only be created when non-empty.
+    pub fn new_nonempty<P: AsRef<Path>>(path: P) -> Self {
+        Self::new_internal(path, false)
     }
 
     /// Create a new goldenfile using a differ inferred from the file extension.
@@ -116,9 +126,15 @@ impl Mint {
             let old = self.path.join(&file);
             let new = self.tempdir.path().join(&file);
 
-            println!("Updating {:?}.", file.to_str().unwrap());
-            fs::copy(&new, &old)
-                .unwrap_or_else(|err| panic!("Error copying {:?} to {:?}: {:?}", &new, &old, err));
+            let empty = File::open(&new).unwrap().metadata().unwrap().len() == 0;
+            if self.create_empty || !empty {
+                println!("Updating {:?}.", file.to_str().unwrap());
+                fs::copy(&new, &old).unwrap_or_else(|err| {
+                    panic!("Error copying {:?} to {:?}: {:?}", &new, &old, err)
+                });
+            } else {
+                std::fs::remove_file(&old).unwrap();
+            }
         }
     }
 }
