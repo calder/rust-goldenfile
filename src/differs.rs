@@ -15,6 +15,8 @@ pub fn text_diff(old: &Path, new: &Path) {
     similar_asserts::assert_eq!(
         &fs::read_to_string(old).unwrap_or("".to_string()),
         &fs::read_to_string(new).unwrap_or("".to_string()),
+        "{}",
+        old.display(),
     );
 }
 
@@ -35,7 +37,7 @@ pub fn binary_diff(old: &Path, new: &Path) {
         .position(|(old_byte, new_byte)| old_byte != new_byte);
 
     if let Some(position) = first_difference {
-        panic!("Files differ at byte {}", position + 1);
+        panic!("{}: Files differ at byte {}", old.display(), position + 1);
     }
 }
 
