@@ -1,6 +1,6 @@
 extern crate goldenfile;
 
-use std::fs;
+use std::fs::{self, File};
 use std::io::Write;
 
 use goldenfile::Mint;
@@ -13,6 +13,15 @@ fn binary_match() {
 
     file1.write_all(b"").unwrap();
     file2.write_all(b"\x00\x01\x02").unwrap();
+}
+
+#[test]
+fn indirect_write() {
+    let mut mint = Mint::new("tests/goldenfiles");
+    let path = mint.register_goldenfile("match1.txt").unwrap();
+    let mut file1 = File::create(path).unwrap();
+
+    writeln!(file1, "Hello world!").unwrap();
 }
 
 #[test]
