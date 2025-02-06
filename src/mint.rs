@@ -44,6 +44,7 @@ impl Mint {
                 mint.path, err
             )
         });
+
         mint
     }
 
@@ -72,8 +73,7 @@ impl Mint {
         path: P,
         differ: Differ,
     ) -> Result<File> {
-        let abs_path = self.register_goldenfile_with_differ(path, differ)?;
-
+        let abs_path = self.new_goldenpath_with_differ(path, differ)?;
         if let Some(abs_parent) = abs_path.parent() {
             if abs_parent != self.tempdir.path() {
                 fs::create_dir_all(abs_parent).unwrap_or_else(|err| {
@@ -84,10 +84,12 @@ impl Mint {
                 });
             }
         }
+
         let maybe_file = File::create(abs_path);
-        if !maybe_file.is_ok() {
+        if maybe_file.is_err() {
             self.files.pop();
         }
+
         maybe_file
     }
 
@@ -135,14 +137,14 @@ impl Mint {
     /// Register a new goldenfile using a differ inferred from the file extension.
     ///
     /// The returned PathBuf references a temporary file, not the goldenfile itself.
-    pub fn register_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<PathBuf> {
-        self.register_goldenfile_with_differ(&path, get_differ_for_path(&path))
+    pub fn new_goldenpath<P: AsRef<Path>>(&mut self, path: P) -> Result<PathBuf> {
+        self.new_goldenpath_with_differ(&path, get_differ_for_path(&path))
     }
 
     /// Register a new goldenfile with the specified diff function.
     ///
     /// The returned PathBuf references a temporary file, not the goldenfile itself.
-    pub fn register_goldenfile_with_differ<P: AsRef<Path>>(
+    pub fn new_goldenpath_with_differ<P: AsRef<Path>>(
         &mut self,
         path: P,
         differ: Differ,
@@ -156,6 +158,7 @@ impl Mint {
 
         let abs_path = self.tempdir.path().to_path_buf().join(path.as_ref());
         self.files.push((path.as_ref().to_path_buf(), differ));
+
         Ok(abs_path)
     }
 }
