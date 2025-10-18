@@ -2,6 +2,7 @@
 name = "goldenfile"
 version = "1.9.1"
 edition = "2024"
+rust-version = "1.88"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
 documentation = "https://docs.rs/goldenfile"
