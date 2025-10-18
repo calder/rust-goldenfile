@@ -74,15 +74,15 @@ impl Mint {
         differ: Differ,
     ) -> Result<File> {
         let abs_path = self.new_goldenpath_with_differ(path, differ)?;
-        if let Some(abs_parent) = abs_path.parent() {
-            if abs_parent != self.tempdir.path() {
-                fs::create_dir_all(abs_parent).unwrap_or_else(|err| {
-                    panic!(
-                        "Failed to create temporary subdirectory {:?}: {:?}",
-                        abs_parent, err
-                    )
-                });
-            }
+        if let Some(abs_parent) = abs_path.parent()
+            && abs_parent != self.tempdir.path()
+        {
+            fs::create_dir_all(abs_parent).unwrap_or_else(|err| {
+                panic!(
+                    "Failed to create temporary subdirectory {:?}: {:?}",
+                    abs_parent, err
+                )
+            });
         }
 
         let maybe_file = File::create(abs_path);
