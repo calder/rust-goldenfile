@@ -170,6 +170,7 @@ pub fn get_differ_for_path<P: AsRef<Path>>(_path: P) -> Differ {
             Some("bin") => Box::new(binary_diff),
             Some("exe") => Box::new(binary_diff),
             Some("gz") => Box::new(binary_diff),
+            Some("pcap") => Box::new(binary_diff),
             Some("tar") => Box::new(binary_diff),
             Some("zip") => Box::new(binary_diff),
             _ => Box::new(text_diff),

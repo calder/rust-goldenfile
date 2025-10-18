@@ -12,12 +12,15 @@ pub type Differ = Box<dyn Fn(&Path, &Path)>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
-    similar_asserts::assert_eq!(
-        &fs::read_to_string(old).unwrap_or("".to_string()),
-        &fs::read_to_string(new).unwrap_or("".to_string()),
-        "{}",
-        old.display(),
-    );
+    let old_str = String::from_utf8(check_io(fs::read(old), "reading file", old));
+    let new_str = String::from_utf8(check_io(fs::read(new), "reading file", new));
+
+    match (old_str, new_str) {
+        (Ok(old_str), Ok(new_str)) => {
+            similar_asserts::assert_eq!(&old_str, &new_str, "{}", old.display())
+        }
+        _ => binary_diff(old, new),
+    }
 }
 
 /// Panic if binary files differ with some basic information about where they
