@@ -1,6 +1,6 @@
 [package]
 name = "goldenfile"
-version = "1.8.0"
+version = "1.9.0"
 edition = "2021"
 description = "Simple goldenfile testing library"
 keywords = ["goldenfile", "test", "library"]
@@ -9,11 +9,6 @@ repository = "https://github.com/calder/rust-goldenfile"
 readme = "README.md"
 license = "MIT"
 authors = ["Calder Coalson <caldercoalson@gmail.com>"]
-
-exclude = [
-  "/.travis.yml",
-  "/scripts",
-]
 
 [dependencies]
 scopeguard = "1"

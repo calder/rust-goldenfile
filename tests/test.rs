@@ -109,3 +109,12 @@ fn nonempty() {
 
     writeln!(file, "Some content").unwrap();
 }
+
+#[test]
+#[should_panic(expected = "Invalid UTF-8")]
+fn invalid_utf8() {
+    let mut mint = Mint::new("tests/goldenfiles");
+    let mut file = mint.new_goldenfile("invalid_utf8.txt").unwrap();
+
+    file.write_all(b"\x00\x01\x02").unwrap();
+}
