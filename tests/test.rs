@@ -111,10 +111,10 @@ fn nonempty() {
 }
 
 #[test]
-#[should_panic(expected = "Invalid UTF-8")]
+#[should_panic(expected = "Files differ at byte 2")]
 fn invalid_utf8() {
     let mut mint = Mint::new("tests/goldenfiles");
     let mut file = mint.new_goldenfile("invalid_utf8.txt").unwrap();
 
-    file.write_all(b"\x00\x01\x02").unwrap();
+    file.write_all(b"\x5e\xb1\x03").unwrap();
 }
