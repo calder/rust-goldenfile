@@ -14,5 +14,6 @@ authors = ["Calder Coalson <caldercoalson@gmail.com>"]
 [dependencies]
 scopeguard = "1"
 similar-asserts = "1"
+static_assertions = "1"
 tempfile = "3"
 yansi = "1"
