@@ -1,6 +1,6 @@
 [package]
 name = "goldenfile"
-version = "1.9.1"
+version = "1.10.0"
 edition = "2024"
 rust-version = "1.88"
 description = "Simple goldenfile testing library"
