@@ -5,6 +5,8 @@ use std::fs;
 use std::fs::File;
 use std::io::{Error, ErrorKind, Result};
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use std::sync::Mutex;
 use std::thread;
 
 use tempfile::TempDir;
@@ -22,6 +24,11 @@ use crate::differs::*;
 ///   2. If `UPDATE_GOLDENFILES=1`, it will replace the old goldenfile
 ///      contents with the newly written contents.
 pub struct Mint {
+    state: Arc<Mutex<MintState>>,
+}
+
+/// Internal Mint state.
+struct MintState {
     path: PathBuf,
     tempdir: TempDir,
     files: Vec<(PathBuf, Differ)>,
@@ -32,20 +39,24 @@ impl Mint {
     /// Create a new goldenfile Mint.
     fn new_internal<P: AsRef<Path>>(path: P, create_empty: bool) -> Self {
         let tempdir = TempDir::new().unwrap();
-        let mint = Mint {
-            path: path.as_ref().to_path_buf(),
-            files: vec![],
-            tempdir,
-            create_empty,
-        };
-        fs::create_dir_all(&mint.path).unwrap_or_else(|err| {
+        let path = path.as_ref().to_path_buf();
+        let files = vec![];
+
+        fs::create_dir_all(&path).unwrap_or_else(|err| {
             panic!(
                 "Failed to create goldenfile directory {:?}: {:?}",
-                mint.path, err
+                path, err
             )
         });
 
-        mint
+        Mint {
+            state: Arc::new(Mutex::new(MintState {
+                path,
+                tempdir,
+                files,
+                create_empty,
+            })),
+        }
     }
 
     /// Create a new goldenfile Mint.
@@ -62,12 +73,66 @@ impl Mint {
     ///
     /// The returned File is a temporary file, not the goldenfile itself.
     pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
-        self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
+        self.state.lock().unwrap().new_goldenfile(path)
     }
 
     /// Create a new goldenfile with the specified diff function.
     ///
     /// The returned File is a temporary file, not the goldenfile itself.
+    pub fn new_goldenfile_with_differ<P: AsRef<Path>>(
+        &mut self,
+        path: P,
+        differ: Differ,
+    ) -> Result<File> {
+        self.state
+            .lock()
+            .unwrap()
+            .new_goldenfile_with_differ(path, differ)
+    }
+
+    /// Check new goldenfile contents against old, and panic if they differ.
+    ///
+    /// Called automatically when a Mint goes out of scope and
+    /// `UPDATE_GOLDENFILES!=1`.
+    pub fn check_goldenfiles(&self) {
+        self.state.lock().unwrap().check_goldenfiles();
+    }
+
+    /// Overwrite old goldenfile contents with their new contents.
+    ///
+    /// Called automatically when a Mint goes out of scope and
+    /// `UPDATE_GOLDENFILES=1`.
+    pub fn update_goldenfiles(&self) {
+        self.state.lock().unwrap().update_goldenfiles();
+    }
+
+    /// Register a new goldenfile using a differ inferred from the file extension.
+    ///
+    /// The returned PathBuf references a temporary file, not the goldenfile itself.
+    pub fn new_goldenpath<P: AsRef<Path>>(&mut self, path: P) -> Result<PathBuf> {
+        self.state.lock().unwrap().new_goldenpath(path)
+    }
+
+    /// Register a new goldenfile with the specified diff function.
+    ///
+    /// The returned PathBuf references a temporary file, not the goldenfile itself.
+    pub fn new_goldenpath_with_differ<P: AsRef<Path>>(
+        &mut self,
+        path: P,
+        differ: Differ,
+    ) -> Result<PathBuf> {
+        self.state
+            .lock()
+            .unwrap()
+            .new_goldenpath_with_differ(path, differ)
+    }
+}
+
+impl MintState {
+    pub fn new_goldenfile<P: AsRef<Path>>(&mut self, path: P) -> Result<File> {
+        self.new_goldenfile_with_differ(&path, get_differ_for_path(&path))
+    }
+
     pub fn new_goldenfile_with_differ<P: AsRef<Path>>(
         &mut self,
         path: P,
@@ -93,10 +158,6 @@ impl Mint {
         maybe_file
     }
 
-    /// Check new goldenfile contents against old, and panic if they differ.
-    ///
-    /// Called automatically when a Mint goes out of scope and
-    /// `UPDATE_GOLDENFILES!=1`.
     pub fn check_goldenfiles(&self) {
         for (file, differ) in &self.files {
             let old = self.path.join(file);
@@ -113,10 +174,6 @@ impl Mint {
         }
     }
 
-    /// Overwrite old goldenfile contents with their new contents.
-    ///
-    /// Called automatically when a Mint goes out of scope and
-    /// `UPDATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
         for (file, _) in &self.files {
             let old = self.path.join(file);
@@ -134,16 +191,10 @@ impl Mint {
         }
     }
 
-    /// Register a new goldenfile using a differ inferred from the file extension.
-    ///
-    /// The returned PathBuf references a temporary file, not the goldenfile itself.
     pub fn new_goldenpath<P: AsRef<Path>>(&mut self, path: P) -> Result<PathBuf> {
         self.new_goldenpath_with_differ(&path, get_differ_for_path(&path))
     }
 
-    /// Register a new goldenfile with the specified diff function.
-    ///
-    /// The returned PathBuf references a temporary file, not the goldenfile itself.
     pub fn new_goldenpath_with_differ<P: AsRef<Path>>(
         &mut self,
         path: P,
