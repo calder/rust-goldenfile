@@ -8,7 +8,7 @@ use std::path::Path;
 use similar_asserts;
 
 /// A function that displays a diff and panics if two files to not match.
-pub type Differ = Box<dyn Fn(&Path, &Path)>;
+pub type Differ = Box<dyn Fn(&Path, &Path) + Send + Sync>;
 
 /// Compare unicode text files. Print a colored diff and panic on failure.
 pub fn text_diff(old: &Path, new: &Path) {
