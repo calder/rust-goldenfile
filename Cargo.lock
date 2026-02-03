@@ -73,7 +73,7 @@ dependencies = [
 
 [[package]]
 name = "goldenfile"
-version = "1.9.1"
+version = "1.10.0"
 dependencies = [
  "scopeguard",
  "similar-asserts",
