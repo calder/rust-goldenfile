@@ -27,6 +27,11 @@ When the `Mint` goes out of scope, it compares the contents of each file to its 
 UPDATE_GOLDENFILES=1 cargo test
 ```
 
+Or if running under Bazel:
+```sh
+UPDATE_GOLDENFILES=1 bazel run ...
+```
+
 ## Contributing
 
 Pull requests are welcome! This project follows the Rust community's [Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct).

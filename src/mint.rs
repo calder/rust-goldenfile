@@ -31,9 +31,10 @@ pub struct Mint {
 impl Mint {
     /// Create a new goldenfile Mint.
     fn new_internal<P: AsRef<Path>>(path: P, create_empty: bool) -> Self {
+        let path = path.as_ref().to_path_buf();
         let tempdir = TempDir::new().unwrap();
         let mint = Mint {
-            path: path.as_ref().to_path_buf(),
+            path,
             files: vec![],
             tempdir,
             create_empty,
@@ -118,8 +119,14 @@ impl Mint {
     /// Called automatically when a Mint goes out of scope and
     /// `UPDATE_GOLDENFILES=1`.
     pub fn update_goldenfiles(&self) {
+        // Support running under Bazel.
+        let path = match std::env::var("BUILD_WORKSPACE_DIRECTORY") {
+            Ok(workspace) => PathBuf::from(workspace).join(&self.path),
+            Err(_) => self.path.clone(),
+        };
+
         for (file, _) in &self.files {
-            let old = self.path.join(file);
+            let old = path.join(file);
             let new = self.tempdir.path().join(file);
 
             let empty = File::open(&new).unwrap().metadata().unwrap().len() == 0;
